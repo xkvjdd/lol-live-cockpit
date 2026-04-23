@@ -18,6 +18,8 @@ type LiveGame = {
   redTeam: string;
   blueProb: number;
   redProb: number;
+  bluePregameProb: number;
+  redPregameProb: number;
   time: string;
   scoreline: string;
   goldline: string;
@@ -70,6 +72,8 @@ const MOCK_LIVE_GAMES: LiveGame[] = [
     redTeam: "Dplus KIA",
     blueProb: 0.72,
     redProb: 0.28,
+    bluePregameProb: 0.61,
+    redPregameProb: 0.39,
     time: "15:00",
     scoreline: "5-3",
     goldline: "31.4k-29.8k",
@@ -206,6 +210,8 @@ function normalizeLiveGames(payload: unknown): LiveGame[] {
       redTeam: String(item.redTeam ?? item.red_team ?? "Red"),
       blueProb: Number(item.blueProb ?? item.blue_prob ?? 0.5),
       redProb: Number(item.redProb ?? item.red_prob ?? 0.5),
+      bluePregameProb: Number(item.bluePregameProb ?? item.blue_pregame_prob ?? 0.5),
+      redPregameProb: Number(item.redPregameProb ?? item.red_pregame_prob ?? 0.5),
       time: String(item.time ?? "--"),
       scoreline: String(item.scoreline ?? "--"),
       goldline: String(item.goldline ?? "--"),
@@ -281,13 +287,19 @@ function Header({ apiStatus, lastUpdated }: { apiStatus: ApiState["apiStatus"]; 
 
 function StreamPanel() {
   const twitchSrc = useMemo(() => {
-    const parent = window.location.hostname || "localhost";
+    const parents = [
+      window.location.hostname,
+      "15.135.167.228",
+      "ec2-15-135-167-228.ap-southeast-2.compute.amazonaws.com",
+      "localhost",
+      "127.0.0.1"
+    ].filter(Boolean);
     const params = new URLSearchParams({
       channel: "lck",
-      parent,
       muted: "true",
       autoplay: "false"
     });
+    Array.from(new Set(parents)).forEach((parent) => params.append("parent", parent));
     return `https://player.twitch.tv/?${params.toString()}`;
   }, []);
 
@@ -309,6 +321,9 @@ function StreamPanel() {
           allowFullScreen
           allow="autoplay; fullscreen"
         />
+        <a className="stream-fallback" href="https://www.twitch.tv/lck" target="_blank" rel="noreferrer">
+          If Twitch blocks the embed, open the LCK stream here.
+        </a>
       </div>
     </section>
   );
@@ -373,13 +388,23 @@ function GameCockpit({ game }: { game: LiveGame }) {
     <section className="cockpit-grid">
       <div className="panel probability-panel">
         <div className="scoreboard">
-          <TeamProbability side="blue" team={game.blueTeam} probability={game.blueProb} />
+          <TeamProbability
+            side="blue"
+            team={game.blueTeam}
+            probability={game.blueProb}
+            pregameProbability={game.bluePregameProb}
+          />
           <div className="match-meta">
             <span>{game.league}</span>
             <strong>Game {game.gameNumber}</strong>
             <span>Patch {game.patch}</span>
           </div>
-          <TeamProbability side="red" team={game.redTeam} probability={game.redProb} />
+          <TeamProbability
+            side="red"
+            team={game.redTeam}
+            probability={game.redProb}
+            pregameProbability={game.redPregameProb}
+          />
         </div>
         <ProbabilityChart points={game.history} blueTeam={game.blueTeam} redTeam={game.redTeam} />
       </div>
@@ -391,11 +416,22 @@ function GameCockpit({ game }: { game: LiveGame }) {
   );
 }
 
-function TeamProbability({ side, team, probability }: { side: "blue" | "red"; team: string; probability: number }) {
+function TeamProbability({
+  side,
+  team,
+  probability,
+  pregameProbability
+}: {
+  side: "blue" | "red";
+  team: string;
+  probability: number;
+  pregameProbability: number;
+}) {
   return (
     <div className={`team-prob ${side}`}>
       <span>{team}</span>
       <strong>{formatPercent(probability)}</strong>
+      <em>Pregame {formatPercent(pregameProbability)}</em>
     </div>
   );
 }

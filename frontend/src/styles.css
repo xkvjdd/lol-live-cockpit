@@ -1,7 +1,6 @@
-@import url("https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,700;6..72,800&family=Space+Grotesk:wght@400;500;700&display=swap");
-
 :root {
   color-scheme: dark;
+  --font: "Goldman Sans", "Goldman Sachs Sans", Arial, Helvetica, sans-serif;
   --bg: #070a12;
   --panel: rgba(13, 18, 32, 0.78);
   --panel-strong: rgba(18, 27, 48, 0.94);
@@ -23,7 +22,7 @@ body {
   min-width: 320px;
   min-height: 100vh;
   color: var(--text);
-  font-family: "Space Grotesk", Verdana, sans-serif;
+  font-family: var(--font);
   background:
     radial-gradient(circle at 15% 5%, rgba(94, 161, 255, 0.32), transparent 34rem),
     radial-gradient(circle at 85% 20%, rgba(255, 95, 127, 0.22), transparent 32rem),
@@ -69,7 +68,7 @@ input {
 h1,
 h2 {
   margin: 0;
-  font-family: "Newsreader", Georgia, serif;
+  font-family: var(--font);
   letter-spacing: -0.055em;
 }
 
@@ -172,6 +171,20 @@ h2 {
   border: 0;
 }
 
+.stream-fallback {
+  position: absolute;
+  right: 14px;
+  bottom: 14px;
+  z-index: 2;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 8px 11px;
+  color: rgba(238, 243, 255, 0.78);
+  background: rgba(0, 0, 0, 0.58);
+  font-size: 12px;
+  text-decoration: none;
+}
+
 .stack {
   display: grid;
   gap: 18px;
@@ -259,6 +272,17 @@ h2 {
   font-size: clamp(44px, 7vw, 84px);
   line-height: 0.86;
   letter-spacing: -0.07em;
+}
+
+.team-prob em {
+  display: block;
+  margin-top: 10px;
+  color: rgba(238, 243, 255, 0.66);
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .team-prob.blue strong {
