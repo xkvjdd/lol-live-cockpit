@@ -28,6 +28,28 @@ LoL Esports live feed
   -> optional Telegram alerts
 ```
 
+## Current Frontend
+
+The first Vite/React frontend is in `frontend/`.
+
+It already includes:
+
+- Upcoming LCK games.
+- Live games section.
+- Embedded LCK Twitch stream.
+- Live probability chart.
+- BUY / WAIT / SELL signal card.
+- Game stats card.
+- Mock fallback data until the backend API is connected.
+
+Run it:
+
+```powershell
+cd frontend
+npm install
+npm run dev
+```
+
 ## Backend API Plan
 
 - `GET /api/schedule?league=lck`
