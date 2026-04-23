@@ -309,11 +309,8 @@ function CommandPanel() {
       <div className="panel-title-row">
         <div>
           <p className="eyebrow">Command Center</p>
-          <h2>Model First. Stream Separate.</h2>
+          <h2>Model Command Center</h2>
         </div>
-        <a className="ghost-link" href="https://www.twitch.tv/lck" target="_blank" rel="noreferrer">
-          Open Twitch
-        </a>
       </div>
       <div className="command-grid">
         <div>
@@ -333,7 +330,7 @@ function CommandPanel() {
         </div>
       </div>
       <div className="command-copy">
-        Keep the stream open in another tab and use this page as the decision surface: pregame model, live win probability, and BUY / WAIT / SELL thresholds.
+        Use this page as the decision surface: pregame model, live win probability, and BUY / WAIT / SELL thresholds.
       </div>
     </section>
   );
