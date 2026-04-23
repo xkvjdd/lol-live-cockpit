@@ -53,6 +53,8 @@ type ApiState = {
   lastUpdated: string;
 };
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "";
+
 const MOCK_HISTORY: ProbabilityPoint[] = [
   { ts: "1", time: "00:00", blueProb: 0.58, redProb: 0.42 },
   { ts: "2", time: "03:00", blueProb: 0.61, redProb: 0.39 },
@@ -179,8 +181,8 @@ export function App() {
 async function fetchCockpitData(): Promise<ApiState> {
   try {
     const [liveResponse, scheduleResponse] = await Promise.all([
-      fetch("/api/live-games?league=lck", { cache: "no-store" }),
-      fetch("/api/schedule?league=lck", { cache: "no-store" })
+      fetch(`${API_BASE_URL}/api/live-games?league=lck`, { cache: "no-store" }),
+      fetch(`${API_BASE_URL}/api/schedule?league=lck`, { cache: "no-store" })
     ]);
     if (!liveResponse.ok || !scheduleResponse.ok) {
       throw new Error("backend unavailable");
@@ -308,6 +310,7 @@ function StreamPanel() {
       window.location.hostname,
       "15.135.167.228",
       "ec2-15-135-167-228.ap-southeast-2.compute.amazonaws.com",
+      "xkvjdd.github.io",
       "localhost",
       "127.0.0.1"
     ].filter(Boolean);
