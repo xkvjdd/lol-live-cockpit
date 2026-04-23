@@ -42,6 +42,8 @@ type ScheduleEvent = {
   team1: string;
   team2: string;
   bestOf: number;
+  team1PregameProb?: number;
+  team2PregameProb?: number;
 };
 
 type ApiState = {
@@ -97,7 +99,9 @@ const MOCK_SCHEDULE: ScheduleEvent[] = [
     startTime: new Date().toISOString(),
     team1: "Gen.G",
     team2: "Dplus KIA",
-    bestOf: 3
+    bestOf: 3,
+    team1PregameProb: 0.61,
+    team2PregameProb: 0.39
   },
   {
     id: "demo-next-1",
@@ -106,7 +110,9 @@ const MOCK_SCHEDULE: ScheduleEvent[] = [
     startTime: "2026-04-24T08:00:00Z",
     team1: "BNK FEARX",
     team2: "kt Rolster",
-    bestOf: 3
+    bestOf: 3,
+    team1PregameProb: 0.44,
+    team2PregameProb: 0.56
   },
   {
     id: "demo-next-2",
@@ -115,7 +121,9 @@ const MOCK_SCHEDULE: ScheduleEvent[] = [
     startTime: "2026-04-24T10:00:00Z",
     team1: "T1",
     team2: "Hanwha Life Esports",
-    bestOf: 3
+    bestOf: 3,
+    team1PregameProb: 0.49,
+    team2PregameProb: 0.51
   }
 ];
 
@@ -239,7 +247,9 @@ function normalizeSchedule(payload: unknown): ScheduleEvent[] {
       startTime: String(item.startTime ?? item.start_time ?? ""),
       team1: String(item.team1 ?? item.team_1 ?? "TBD"),
       team2: String(item.team2 ?? item.team_2 ?? "TBD"),
-      bestOf: Number(item.bestOf ?? item.best_of ?? 3)
+      bestOf: Number(item.bestOf ?? item.best_of ?? 3),
+      team1PregameProb: optionalNumber(item.team1PregameProb ?? item.team1_pregame_prob),
+      team2PregameProb: optionalNumber(item.team2PregameProb ?? item.team2_pregame_prob)
     };
   });
 }
@@ -269,6 +279,12 @@ function normalizeState(value: unknown): ScheduleEvent["state"] {
   return "unstarted";
 }
 
+function optionalNumber(value: unknown): number | undefined {
+  if (value === null || value === undefined || value === "") return undefined;
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : undefined;
+}
+
 function Header({ apiStatus, lastUpdated }: { apiStatus: ApiState["apiStatus"]; lastUpdated: string }) {
   return (
     <header className="topbar">
@@ -286,6 +302,7 @@ function Header({ apiStatus, lastUpdated }: { apiStatus: ApiState["apiStatus"]; 
 }
 
 function StreamPanel() {
+  const isIpHost = /^\d+\.\d+\.\d+\.\d+$/.test(window.location.hostname);
   const twitchSrc = useMemo(() => {
     const parents = [
       window.location.hostname,
@@ -315,15 +332,25 @@ function StreamPanel() {
         </a>
       </div>
       <div className="stream-frame">
-        <iframe
-          src={twitchSrc}
-          title="LCK Twitch Stream"
-          allowFullScreen
-          allow="autoplay; fullscreen"
-        />
-        <a className="stream-fallback" href="https://www.twitch.tv/lck" target="_blank" rel="noreferrer">
-          If Twitch blocks the embed, open the LCK stream here.
-        </a>
+        {isIpHost ? (
+          <div className="stream-blocked">
+            <strong>Twitch blocks raw-IP embeds.</strong>
+            <span>The model dashboard still works here. Open the stream in a separate Twitch tab until we attach a real domain.</span>
+            <a href="https://www.twitch.tv/lck" target="_blank" rel="noreferrer">Open LCK Stream</a>
+          </div>
+        ) : (
+          <>
+            <iframe
+              src={twitchSrc}
+              title="LCK Twitch Stream"
+              allowFullScreen
+              allow="autoplay; fullscreen"
+            />
+            <a className="stream-fallback" href="https://www.twitch.tv/lck" target="_blank" rel="noreferrer">
+              If Twitch blocks the embed, open the LCK stream here.
+            </a>
+          </>
+        )}
       </div>
     </section>
   );
@@ -372,9 +399,15 @@ function UpcomingGames({ events }: { events: ScheduleEvent[] }) {
         {events.map((event) => (
           <div className="schedule-row" key={event.id}>
             <span>{formatStart(event.startTime)}</span>
-            <strong>{event.team1}</strong>
+            <strong>
+              {event.team1}
+              <b>{formatOptionalPercent(event.team1PregameProb)}</b>
+            </strong>
             <small>vs</small>
-            <strong>{event.team2}</strong>
+            <strong>
+              {event.team2}
+              <b>{formatOptionalPercent(event.team2PregameProb)}</b>
+            </strong>
             <em>BO{event.bestOf}</em>
           </div>
         ))}
@@ -582,6 +615,11 @@ function EmptyState() {
 function formatPercent(value: number) {
   if (!Number.isFinite(value)) return "--.-%";
   return `${(value * 100).toFixed(1)}%`;
+}
+
+function formatOptionalPercent(value: number | undefined) {
+  if (value === undefined) return "pregame pending";
+  return `pregame ${formatPercent(value)}`;
 }
 
 function formatStart(value: string) {
