@@ -44,7 +44,7 @@ input {
 .topbar,
 .panel-title-row,
 .scoreboard,
-.hero-grid,
+.top-grid,
 .cockpit-grid {
   display: grid;
   gap: 18px;
@@ -115,8 +115,8 @@ h2 {
   box-shadow: 0 0 18px var(--red);
 }
 
-.hero-grid {
-  grid-template-columns: minmax(0, 1.65fr) minmax(320px, 0.9fr);
+.top-grid {
+  grid-template-columns: minmax(280px, 0.85fr) minmax(280px, 1fr) minmax(320px, 1.25fr);
   align-items: stretch;
   margin-bottom: 18px;
 }
@@ -129,7 +129,6 @@ h2 {
   backdrop-filter: blur(20px);
 }
 
-.command-panel,
 .compact-panel,
 .probability-panel,
 .signal-card,
@@ -152,55 +151,6 @@ h2 {
   color: var(--text);
   background: rgba(255, 255, 255, 0.06);
   text-decoration: none;
-}
-
-.command-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 14px;
-  min-height: 260px;
-}
-
-.command-grid div {
-  display: grid;
-  align-content: end;
-  gap: 8px;
-  min-height: 230px;
-  border: 1px solid var(--line);
-  border-radius: 24px;
-  padding: 18px;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.035)),
-    radial-gradient(circle at top left, rgba(94, 161, 255, 0.15), transparent 16rem);
-}
-
-.command-grid span,
-.command-grid em {
-  color: var(--muted);
-  font-style: normal;
-}
-
-.command-grid span {
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
-
-.command-grid strong {
-  font-size: clamp(34px, 5vw, 64px);
-  line-height: 0.88;
-  letter-spacing: -0.04em;
-}
-
-.command-copy {
-  margin-top: 14px;
-  border: 1px solid var(--line);
-  border-radius: 20px;
-  padding: 16px;
-  color: var(--muted);
-  background: rgba(0, 0, 0, 0.14);
-  line-height: 1.45;
 }
 
 .stack {
@@ -264,7 +214,7 @@ h2 {
 }
 
 .cockpit-grid {
-  grid-template-columns: minmax(0, 1.35fr) minmax(300px, 0.65fr);
+  grid-template-columns: minmax(0, 1.55fr) minmax(300px, 0.55fr);
   align-items: stretch;
 }
 
@@ -376,7 +326,7 @@ h2 {
 }
 
 .signal-card {
-  min-height: 260px;
+  min-height: 100%;
 }
 
 .signal-action {
@@ -448,7 +398,7 @@ h2 {
 }
 
 @media (max-width: 1040px) {
-  .hero-grid,
+  .top-grid,
   .cockpit-grid {
     grid-template-columns: 1fr;
   }
@@ -491,11 +441,4 @@ h2 {
     text-align: left;
   }
 
-  .command-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .command-grid div {
-    min-height: 150px;
-  }
 }

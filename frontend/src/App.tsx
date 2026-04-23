@@ -166,12 +166,10 @@ export function App() {
   return (
     <main className="shell">
       <Header apiStatus={state.apiStatus} lastUpdated={state.lastUpdated} />
-      <section className="hero-grid">
-        <CommandPanel />
-        <div className="stack">
-          <LiveGames games={state.liveGames} selectedGameId={selectedGame?.gameId} onSelect={setSelectedGameId} />
-          <UpcomingGames events={upcoming} />
-        </div>
+      <section className="top-grid">
+        {selectedGame ? <SignalCard game={selectedGame} /> : <NoSignalCard />}
+        <LiveGames games={state.liveGames} selectedGameId={selectedGame?.gameId} onSelect={setSelectedGameId} />
+        <UpcomingGames events={upcoming} />
       </section>
       {selectedGame ? <GameCockpit game={selectedGame} /> : <EmptyState />}
     </main>
@@ -303,39 +301,6 @@ function Header({ apiStatus, lastUpdated }: { apiStatus: ApiState["apiStatus"]; 
   );
 }
 
-function CommandPanel() {
-  return (
-    <section className="panel command-panel">
-      <div className="panel-title-row">
-        <div>
-          <p className="eyebrow">Command Center</p>
-          <h2>Model Command Center</h2>
-        </div>
-      </div>
-      <div className="command-grid">
-        <div>
-          <span>Signal Loop</span>
-          <strong>3s</strong>
-          <em>frontend refresh</em>
-        </div>
-        <div>
-          <span>Backend</span>
-          <strong>Live</strong>
-          <em>same HTTPS origin</em>
-        </div>
-        <div>
-          <span>Mode</span>
-          <strong>LCK</strong>
-          <em>schedule + live model</em>
-        </div>
-      </div>
-      <div className="command-copy">
-        Use this page as the decision surface: pregame model, live win probability, and BUY / WAIT / SELL thresholds.
-      </div>
-    </section>
-  );
-}
-
 function LiveGames({ games, selectedGameId, onSelect }: { games: LiveGame[]; selectedGameId?: string; onSelect: (id: string) => void }) {
   return (
     <section className="panel compact-panel">
@@ -421,10 +386,7 @@ function GameCockpit({ game }: { game: LiveGame }) {
         </div>
         <ProbabilityChart points={game.history} blueTeam={game.blueTeam} redTeam={game.redTeam} />
       </div>
-      <aside className="side-stack">
-        <SignalCard game={game} />
-        <StatsCard game={game} />
-      </aside>
+      <StatsCard game={game} />
     </section>
   );
 }
@@ -459,6 +421,18 @@ function SignalCard({ game }: { game: LiveGame }) {
         {formatPercent(game.actionProb)} / trigger {formatPercent(game.actionThreshold)}
       </div>
       <p>{game.actionReason || "Waiting for the calibrated probability x time trigger."}</p>
+    </section>
+  );
+}
+
+function NoSignalCard() {
+  return (
+    <section className="panel signal-card wait">
+      <p className="eyebrow">Signal</p>
+      <div className="signal-action">WAIT</div>
+      <div className="signal-team">No live game</div>
+      <div className="signal-prob">Waiting for LCK to go live</div>
+      <p>Pregame probabilities are shown in Next. Live BUY / WAIT / SELL appears here once a game is in progress.</p>
     </section>
   );
 }
