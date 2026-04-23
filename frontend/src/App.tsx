@@ -167,7 +167,7 @@ export function App() {
     <main className="shell">
       <Header apiStatus={state.apiStatus} lastUpdated={state.lastUpdated} />
       <section className="hero-grid">
-        <StreamPanel />
+        <CommandPanel />
         <div className="stack">
           <LiveGames games={state.liveGames} selectedGameId={selectedGame?.gameId} onSelect={setSelectedGameId} />
           <UpcomingGames events={upcoming} />
@@ -303,57 +303,37 @@ function Header({ apiStatus, lastUpdated }: { apiStatus: ApiState["apiStatus"]; 
   );
 }
 
-function StreamPanel() {
-  const isIpHost = /^\d+\.\d+\.\d+\.\d+$/.test(window.location.hostname);
-  const twitchSrc = useMemo(() => {
-    const parents = [
-      window.location.hostname,
-      "15.135.167.228",
-      "ec2-15-135-167-228.ap-southeast-2.compute.amazonaws.com",
-      "xkvjdd.github.io",
-      "localhost",
-      "127.0.0.1"
-    ].filter(Boolean);
-    const params = new URLSearchParams({
-      channel: "lck",
-      muted: "true",
-      autoplay: "false"
-    });
-    Array.from(new Set(parents)).forEach((parent) => params.append("parent", parent));
-    return `https://player.twitch.tv/?${params.toString()}`;
-  }, []);
-
+function CommandPanel() {
   return (
-    <section className="panel stream-panel">
+    <section className="panel command-panel">
       <div className="panel-title-row">
         <div>
-          <p className="eyebrow">Broadcast</p>
-          <h2>LCK Stream</h2>
+          <p className="eyebrow">Command Center</p>
+          <h2>Model First. Stream Separate.</h2>
         </div>
         <a className="ghost-link" href="https://www.twitch.tv/lck" target="_blank" rel="noreferrer">
           Open Twitch
         </a>
       </div>
-      <div className="stream-frame">
-        {isIpHost ? (
-          <div className="stream-blocked">
-            <strong>Twitch blocks raw-IP embeds.</strong>
-            <span>The model dashboard still works here. Open the stream in a separate Twitch tab until we attach a real domain.</span>
-            <a href="https://www.twitch.tv/lck" target="_blank" rel="noreferrer">Open LCK Stream</a>
-          </div>
-        ) : (
-          <>
-            <iframe
-              src={twitchSrc}
-              title="LCK Twitch Stream"
-              allowFullScreen
-              allow="autoplay; fullscreen"
-            />
-            <a className="stream-fallback" href="https://www.twitch.tv/lck" target="_blank" rel="noreferrer">
-              If Twitch blocks the embed, open the LCK stream here.
-            </a>
-          </>
-        )}
+      <div className="command-grid">
+        <div>
+          <span>Signal Loop</span>
+          <strong>3s</strong>
+          <em>frontend refresh</em>
+        </div>
+        <div>
+          <span>Backend</span>
+          <strong>Live</strong>
+          <em>same HTTPS origin</em>
+        </div>
+        <div>
+          <span>Mode</span>
+          <strong>LCK</strong>
+          <em>schedule + live model</em>
+        </div>
+      </div>
+      <div className="command-copy">
+        Keep the stream open in another tab and use this page as the decision surface: pregame model, live win probability, and BUY / WAIT / SELL thresholds.
       </div>
     </section>
   );
