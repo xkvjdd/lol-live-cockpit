@@ -59,9 +59,9 @@ const MOCK_HISTORY: ProbabilityPoint[] = [
   { ts: "1", time: "00:00", blueProb: 0.58, redProb: 0.42 },
   { ts: "2", time: "03:00", blueProb: 0.61, redProb: 0.39 },
   { ts: "3", time: "06:00", blueProb: 0.64, redProb: 0.36 },
-  { ts: "4", time: "09:00", blueProb: 0.59, redProb: 0.41 },
-  { ts: "5", time: "12:00", blueProb: 0.67, redProb: 0.33 },
-  { ts: "6", time: "15:00", blueProb: 0.72, redProb: 0.28 }
+  { ts: "4", time: "09:00", blueProb: 0.66, redProb: 0.34 },
+  { ts: "5", time: "12:00", blueProb: 0.72, redProb: 0.28 },
+  { ts: "6", time: "15:00", blueProb: 0.78, redProb: 0.22 }
 ];
 
 const MOCK_LIVE_GAMES: LiveGame[] = [
@@ -74,8 +74,8 @@ const MOCK_LIVE_GAMES: LiveGame[] = [
     patch: "16.8",
     blueTeam: "Gen.G",
     redTeam: "Dplus KIA",
-    blueProb: 0.72,
-    redProb: 0.28,
+    blueProb: 0.78,
+    redProb: 0.22,
     bluePregameProb: 0.61,
     redPregameProb: 0.39,
     time: "15:00",
@@ -86,9 +86,9 @@ const MOCK_LIVE_GAMES: LiveGame[] = [
     towers: "4-2",
     action: "BUY",
     actionTeam: "Gen.G",
-    actionProb: 0.72,
-    actionThreshold: 0.55,
-    actionReason: "10-20m trigger is 55%; model leader clears it.",
+    actionProb: 0.78,
+    actionThreshold: 0.75,
+    actionReason: "15-20m rising conviction trigger is 75%; model leader clears it.",
     history: MOCK_HISTORY
   }
 ];
