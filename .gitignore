@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.venv/
+venv/
+
+# Node / frontend
+node_modules/
+dist/
+build/
+.vite/
+
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Local/runtime artifacts
+*.log
+*.sqlite
+*.db
+data/cache/
+data/raw/
+data/models/
+data/outputs/
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
